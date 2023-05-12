@@ -7,8 +7,12 @@ on:
         description: 'A JSON-encoded array of paths to toml files to be checked'
         required: true
         type: string
-      version:
-        description: 'The version to validate'
+      reftype:
+        description: 'The github.ref_type'
+        required: true
+        type: string
+      refname:
+        description: 'The github.ref_name to validate'
         required: false
         type: string
         default: ''
@@ -17,33 +21,55 @@ jobs:
   semver:
     name: Validate SEMVER compliance
     runs-on: ubuntu-latest
+    outputs:
+      toml: ${{ steps.notag.outputs.toml }}
     steps:
-      - if: ${{ inputs.version != '' }}
+      - id: istag
+        if: ${{ inputs.reftype == 'tag' }}
         uses: rubenesp87/semver-validation-action@0.1.0
         with:
-          version: ${{ inputs.version }}
-      - if: ${{ inputs.version == '' }}
+          version: ${{ inputs.refname }}
+      - id: notag
+        if: ${{ inputs.reftype != 'tag' }}
         run: |
-          echo '::warning::Validation skipped, because no version supplied'
-          echo "First toml: ${{ fromJson(inputs.tomls)[0] }}"
+          echo "toml=${{ fromJson(inputs.tomls)[0] }}" >> "$GITHUB_OUTPUT"
+          echo '::warning::Validation skipped, because reftype != "tag"'
 
+
+  getversion:
+    needs: [semver]
+    runs-on: ubuntu-latest
+    outputs:
+      version: ${{ steps.setversion.outputs.version }}
+    steps:
+      - id: readtoml
+        if: ${{ needs.semver.outputs.toml != '' }}
+        uses: SebRollen/toml-action@v1.0.2
+        with:
+          file: ${{ needs.semver.outputs.toml }}
+          field: 'package.version'
+      - id: setversion
+      - run: |
+          if [[ ${{ steps.readtoml.outputs.value != '' }} ]] ; then
+            echo "version=${{ steps.readtoml.outputs.value }}" >> "$GITHUB_OUTPUT"
+          else
+            echo "version=${{ inputs.refname }}" >> "$GITHUB_OUTPUT"
+          fi
 
   tomls:
-    needs: [semver]
+    needs: [getversion]
     runs-on: ubuntu-latest
     strategy:
       matrix:
         file: ${{ fromJson(inputs.tomls) }}
     steps:
-      - uses: actions/checkout@v3
-      - run: echo "checking ${{ matrix.file }}"
       - id: readtoml
         uses: SebRollen/toml-action@v1.0.2
         with:
           file: ${{ matrix.file }}
           field: 'package.version'
       - run: |
-          if [[ "${{ steps.readtoml.outputs.value }}" != "${{ inputs.version }}" ]] ; then
-            echo "::error::Versions do not match: specified=${{ inputs.version }}, in ${{ matrix.file }}=${{ steps.readtoml.outputs.value }}"
+          if [[ "${{ steps.readtoml.outputs.value }}" != "${{ needs.getversion.version }}" ]] ; then
+            echo "::error::Versions do not match: specified=${{ needs.getversion.version }}, read=${{ steps.readtoml.outputs.value }}"
             exit 1
           fi
