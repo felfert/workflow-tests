@@ -1,3 +1,14 @@
+# Reusable workflow for checking versions of a cargo project.
+#
+# Implemeted logic:
+#
+# Usecase 1: If reftype is 'tag' (the version is in refname):
+#  1. Check refname for SEMVER compliance
+#  2. Compare package.version of all specified tomls to refname and fail, if they are different
+#
+# Usecase 2: If reftype is 'branch':
+#  1. Verify, that all specified tomls have the same package.version
+
 name: Check Versions
 
 on:
