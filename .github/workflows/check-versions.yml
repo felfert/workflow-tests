@@ -49,7 +49,7 @@ jobs:
           field: 'package.version'
       - id: setversion
         run: |
-          if [[ ${{ steps.readtoml.outputs.value != '' }} ]] ; then
+          if [[ -n "${{ needs.semver.outputs.toml }}" ]] ; then
             echo "version=${{ steps.readtoml.outputs.value }}" >> "$GITHUB_OUTPUT"
           else
             echo "version=${{ inputs.refname }}" >> "$GITHUB_OUTPUT"
@@ -68,7 +68,7 @@ jobs:
           file: ${{ matrix.file }}
           field: 'package.version'
       - run: |
-          if [[ "${{ steps.readtoml.outputs.value }}" != "${{ needs.getversion.version }}" ]] ; then
-            echo "::error::Versions do not match: specified=${{ needs.getversion.version }}, read=${{ steps.readtoml.outputs.value }}"
+          if [[ "${{ steps.readtoml.outputs.value }}" != "${{ needs.getversion.outputs.version }}" ]] ; then
+            echo "::error::Versions do not match: specified=${{ needs.getversion.outputs.version }}, read=${{ steps.readtoml.outputs.value }}"
             exit 1
           fi
