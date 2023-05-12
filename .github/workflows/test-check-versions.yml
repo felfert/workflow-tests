@@ -1,4 +1,4 @@
-name: Test check-versions reusable action
+name: Test check-versions
 
 on:
   workflow_dispatch:
@@ -28,9 +28,16 @@ jobs:
     with:
       refname: ${{ inputs.refname }}
       reftype: ${{ inputs.reftype }}
-      tomls: '["gibsnich", "cherryrgb/Cargo.toml"]'
+      tomls: '["Cargo-falsch.toml", "cherryrgb/Cargo.toml"]'
 
   test3:
+    uses: ./.github/workflows/check-versions.yml
+    with:
+      refname: ${{ inputs.refname }}
+      reftype: ${{ inputs.reftype }}
+      tomls: '["gibsnich", "cherryrgb/Cargo.toml"]'
+
+  test4:
     uses: ./.github/workflows/check-versions.yml
     with:
       refname: ${{ inputs.refname }}
