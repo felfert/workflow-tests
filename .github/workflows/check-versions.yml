@@ -57,8 +57,13 @@ jobs:
           fi
 
   tomls:
-    needs: [getversion]
+    needs: [semver, getversion]
     runs-on: ubuntu-latest
+    # See https://github.com/actions/runner/issues/491 for an explanation of
+    # the following weird conditional expression:
+    if: |
+      always() && !cancelled() &&
+      (needs.semver.result == 'success' || needs.semver.result == 'skipped')
     strategy:
       matrix:
         file: ${{ fromJson(inputs.tomls) }}
