@@ -23,7 +23,10 @@ jobs:
         with:
           version: ${{ inputs.version }}
       - if: ${{ inputs.version == '' }}
-        run: echo '::warning::Validation skipped, because no version supplied'
+        run: |
+          echo '::warning::Validation skipped, because no version supplied'
+          echo "First toml: ${{ fromJson(inputs.tomls)[0] }}"
+
 
   tomls:
     needs: [semver]
