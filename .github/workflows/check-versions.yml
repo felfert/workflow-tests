@@ -13,9 +13,8 @@ on:
         type: string
       refname:
         description: 'The github.ref_name to validate'
-        required: false
+        required: true
         type: string
-        default: ''
  
 jobs:
   semver:
@@ -49,7 +48,7 @@ jobs:
           file: ${{ needs.semver.outputs.toml }}
           field: 'package.version'
       - id: setversion
-      - run: |
+        run: |
           if [[ ${{ steps.readtoml.outputs.value != '' }} ]] ; then
             echo "version=${{ steps.readtoml.outputs.value }}" >> "$GITHUB_OUTPUT"
           else
