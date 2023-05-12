@@ -3,15 +3,23 @@ name: Test check-versions reusable action
 on:
   workflow_dispatch:
     inputs:
-      version:
+      refname:
+        required: true
         description: 'Version or Tag'     
         type: string
-        required: false
+      reftype:
+        required: true
+        description: 'Type of refname'
+        type: choice
+        options: 
+          - tag
+          - branch
 
 jobs:
   test:
     uses: ./.github/workflows/check-versions.yml
     with:
-      version: ${{ inputs.version }}
+      refname: ${{ inputs.refname }}
+      reftype: ${{ inputs.reftype }}
       tomls: '["Cargo.toml", "cherryrgb/Cargo.toml"]'
 
