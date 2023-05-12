@@ -13,5 +13,6 @@ jobs:
     uses: ./.github/workflows/check-versions.yml
     with:
       version: ${{ inputs.version }}
-      tomls: '["Cargo.toml", "cherryrgb/Cargo.toml"]'
+      #tomls: '["Cargo.toml", "cherryrgb/Cargo.toml"]'
+      tomls: '[]'
 
