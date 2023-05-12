@@ -1,0 +1,42 @@
+name: Check Versions
+
+on:
+  workflow_call:
+    inputs:
+      tomls:
+        description: 'A JSON-encoded array of paths to toml files to be checked'
+        required: true
+        type: string
+      version:
+        description: 'The version to compare'
+        required: false
+        type: string
+        default: ${{ github.ref_name }}
+ 
+jobs:
+  semver:
+    name: Validate SEMVER compliance
+    runs-on: ubuntu-latest
+    steps:
+      - uses: rubenesp87/semver-validation-action@0.1.0
+        with:
+          version: ${{ inputs.version }}
+  tomls:
+    needs: [semver]
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        file: ${{ fromJson(inputs.tomls) }}
+    steps:
+      - uses: actions/checkout@v3
+      - run: echo "checking ${{ matrix.file }}"
+      - id: readtoml
+        uses: SebRollen/toml-action@v1.0.2
+        with:
+          file: ${{ matrix.file }}
+          field: 'package.version'
+      - run: |
+          if [[ "${{ steps.readtoml.outputs.value }}" != "${{ inputs.version }}" ]] ; then
+            echo "::error::Versions do not match: specified=${{ inputs.version }}, in ${{ matrix.file }}=${{ steps.readtoml.outputs.value }}"
+            exit 1
+          fi
