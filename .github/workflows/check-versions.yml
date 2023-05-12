@@ -41,6 +41,7 @@ jobs:
     outputs:
       version: ${{ steps.setversion.outputs.version }}
     steps:
+      - uses: actions/checkout@v3
       - id: readtoml
         if: ${{ needs.semver.outputs.toml != '' }}
         uses: SebRollen/toml-action@v1.0.2
@@ -62,6 +63,7 @@ jobs:
       matrix:
         file: ${{ fromJson(inputs.tomls) }}
     steps:
+      - uses: actions/checkout@v3
       - id: readtoml
         uses: SebRollen/toml-action@v1.0.2
         with:
