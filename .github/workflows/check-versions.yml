@@ -8,17 +8,18 @@ on:
         required: true
         type: string
       version:
-        description: 'The version to compare'
+        description: 'The version to validate'
         required: false
         type: string
-        default: ${{ github.ref_name }}
+        default: ''
  
 jobs:
   semver:
     name: Validate SEMVER compliance
     runs-on: ubuntu-latest
     steps:
-      - uses: rubenesp87/semver-validation-action@0.1.0
+      - if: ${{ inputs.version != '' }}
+        uses: rubenesp87/semver-validation-action@0.1.0
         with:
           version: ${{ inputs.version }}
   tomls:
