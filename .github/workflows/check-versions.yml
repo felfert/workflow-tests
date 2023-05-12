@@ -7,50 +7,50 @@ on:
         description: 'A JSON-encoded array of paths to toml files to be checked'
         required: true
         type: string
+      # The following two parameters exist only so that they can be overridden
+      # by an invoking test workflow.
       reftype:
         description: 'The github.ref_type'
-        required: true
+        required: false
         type: string
+        default: ${{ github.ref_type }}
       refname:
-        description: 'The github.ref_name to validate'
-        required: true
+        description: 'The github.ref_name'
+        required: false
         type: string
+        default: ${{ github.ref_name }}
  
 jobs:
   semver:
     name: Validate SEMVER compliance
+    if: ${{ inputs.reftype == 'tag' }}
     runs-on: ubuntu-latest
-    outputs:
-      toml: ${{ steps.notag.outputs.toml }}
     steps:
-      - id: istag
-        if: ${{ inputs.reftype == 'tag' }}
-        uses: rubenesp87/semver-validation-action@0.1.0
+      - uses: rubenesp87/semver-validation-action@0.1.0
         with:
           version: ${{ inputs.refname }}
-      - id: notag
-        if: ${{ inputs.reftype != 'tag' }}
-        run: |
-          echo "toml=${{ fromJson(inputs.tomls)[0] }}" >> "$GITHUB_OUTPUT"
-          echo '::warning::Validation skipped, because reftype != "tag"'
-
 
   getversion:
     needs: [semver]
     runs-on: ubuntu-latest
+    # See https://github.com/actions/runner/issues/491 for an explanation of
+    # the following weird conditional expression:
+    if: |
+      always() && !cancelled() &&
+      (needs.semver.result == 'success' || needs.semver.result == 'skipped')
     outputs:
       version: ${{ steps.setversion.outputs.version }}
     steps:
       - uses: actions/checkout@v3
       - id: readtoml
-        if: ${{ needs.semver.outputs.toml != '' }}
+        if: ${{ needs.semver.result == 'skipped' }}
         uses: SebRollen/toml-action@v1.0.2
         with:
-          file: ${{ needs.semver.outputs.toml }}
+          file: "${{ fromJson(inputs.tomls)[0] }}"
           field: 'package.version'
       - id: setversion
         run: |
-          if [[ -n "${{ needs.semver.outputs.toml }}" ]] ; then
+          if [[ -n "${{ steps.readtoml.outputs.value }}" ]] ; then
             echo "version=${{ steps.readtoml.outputs.value }}" >> "$GITHUB_OUTPUT"
           else
             echo "version=${{ inputs.refname }}" >> "$GITHUB_OUTPUT"
