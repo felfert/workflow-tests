@@ -23,7 +23,6 @@ jobs:
             refname: '0.2.4'
             reftype: 'tag'
             tomls: '[]'
-            expectsuccess: true
 
   test1:
     name: Normal tag
@@ -32,6 +31,7 @@ jobs:
       refname: '0.2.4'
       reftype: 'tag'
       tomls: '["Cargo.toml", "cherryrgb/Cargo.toml"]'
+      testattr: '{"expectsuccess":true}'
 
   test2:
     name: Wrong version in toml
@@ -40,6 +40,7 @@ jobs:
       refname: '0.2.4'
       reftype: 'tag'
       tomls: '["Cargo-wrongversion.toml", "cherryrgb/Cargo.toml"]'
+      testattr: '{"expectsuccess":false}'
 
   test3:
     name: Wrong version in toml
@@ -48,6 +49,7 @@ jobs:
       refname: '0.2.4'
       reftype: 'tag'
       tomls: '["Cargo-wrongversion.toml", "cherryrgb/Cargo.toml"]'
+      testattr: '{"expectsuccess":false}'
 
   test4:
     name: Nonexistant toml
@@ -56,6 +58,7 @@ jobs:
       refname: '0.2.4'
       reftype: 'tag'
       tomls: '["nonexistent.toml", "cherryrgb/Cargo.toml"]'
+      testattr: '{"expectsuccess":false}'
 
   test5:
     name: Invalid JSON
@@ -64,6 +67,7 @@ jobs:
       refname: '0.2.4'
       reftype: 'tag'
       tomls: 'invalidJSON'
+      testattr: '{"expectsuccess":false}'
 
   test6:
     name: Empty tomls
@@ -72,10 +76,11 @@ jobs:
       refname: '0.2.4'
       reftype: 'tag'
       tomls: '[]'
+      testattr: '{"expectsuccess":true}'
 
   main:
-    needs: [test1, test2, test4, test4, test5, test6]
+    needs: [test1, test2, test3, test4, test4, test5, test6]
     if: always() && !cancelled()
     runs-on: ubuntu-latest
     steps:
-      - run: echo "${{ toJSON(needs.test1) }}"
+      - run: echo "${{ toJSON(needs.*) }}"
