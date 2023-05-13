@@ -1,0 +1,34 @@
+name: UT2 for check-versions workflow
+
+# See https://docs.github.com/en/actions/using-workflows/reusing-workflows#using-a-matrix-strategy-with-a-reusable-workflow
+
+on:
+  workflow_dispatch:
+
+jobs:
+
+  test:
+    name: ${{ matrix.job.name }}
+    uses: ./.github/workflows/check-versions.yml 
+    with:
+      refname: ${{ matrix.job.refname }}
+      reftype: ${{ matrix.job.reftype }}
+      tomls: ${{ matrix.job.tomls }}
+      testattr: '{"name":"${{ matrix.job.name }}","expectsuccess":"${{ matrix.job.expectsuccess }}"}'
+    strategy:
+      fail-fast: false
+      matrix:
+        job:
+          - name: Empty tomls
+            refname: '0.2.4'
+            reftype: 'tag'
+            tomls: '[]'
+            expectsuccess: true
+
+  main:
+    needs: [test]
+    if: always() && !cancelled()
+    runs-on: ubuntu-latest
+    steps:
+      #- run: echo "${{ toJSON(needs.*) }}"
+      - run: echo "${{ needs.* }}"
