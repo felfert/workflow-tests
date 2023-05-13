@@ -38,7 +38,7 @@ jobs:
     outputs:
       firsttoml: ${{ steps.getfirst.outputs.firsttoml }}
     steps:
-      - id checkparam
+      - id: checkparam
         run: |
           if [[ "${{ startsWith(inputs.tomls, '[') && endsWith(inputs.tomls, ']') }}" != 'true' ]] ; then
             echo '::error::Parameter tomls must be a JSON-encoded array'
