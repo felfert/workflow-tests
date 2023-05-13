@@ -54,7 +54,7 @@ jobs:
       expected: ${{ steps.check.outputs.expected }}
     steps:
       - id: check
-      - run: |
+        run: |
           echo "name=${{ inputs.name }}" >> "$GITHUB_OUTPUT"
           echo "name=${{ inputs.expected }}" >> "$GITHUB_OUTPUT"
           if [[ "${{ startsWith(inputs.tomls, '[') && endsWith(inputs.tomls, ']') }}" != 'true' ]] ; then
