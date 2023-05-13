@@ -35,22 +35,12 @@ jobs:
   checkparam:
     name: Validate parameter
     runs-on: ubuntu-latest
-    outputs:
-      firsttoml: ${{ steps.getfirst.outputs.firsttoml }}
     steps:
-      - id: checkparam
         run: |
           if [[ "${{ startsWith(inputs.tomls, '[') && endsWith(inputs.tomls, ']') }}" != 'true' ]] ; then
             echo '::error::Parameter tomls must be a JSON-encoded array'
             exit 1
           fi
-      - id: debug
-        run: |
-          echo "setps.checkparam=${{ toJson(steps.checkparam) }}"
-      - id: getfirst
-        if: ${{ steps.checkparam.conclusion == 'success' }}
-        run: |
-          echo "firsttoml=${{ fromJson(inputs.tomls)[0] }}" >> "$GITHUB_OUTPUT"
 
   semver:
     name: Validate SEMVER compliance
@@ -75,7 +65,7 @@ jobs:
     steps:
       - uses: actions/checkout@v3
       - id: readtoml
-        if: ${{ needs.semver.result == 'skipped' && needs.checkparam.firsttoml != '' }}
+        if: ${{ needs.semver.result == 'skipped' && fromJson(inputs.tomls)[0] != '' }}
         uses: SebRollen/toml-action@v1.0.2
         with:
           file: "${{ fromJson(inputs.tomls)[0] }}"
