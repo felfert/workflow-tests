@@ -31,4 +31,4 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       #- run: echo "${{ toJSON(needs.*) }}"
-      - run: echo "${{ needs.*.matrix }}"
+      - run: echo "${{ needs.*.outputs.testattr }}"
