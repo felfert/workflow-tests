@@ -40,11 +40,11 @@ jobs:
     steps:
       - id: checkparam
         run: |
-          tomls0=${{ fromJson(inputs.tomls) }}
           if [[ "${{ startsWith(inputs.tomls, '[') && endsWith(inputs.tomls, ']') }}" != 'true' ]] ; then
             echo '::error::Parameter tomls must be a JSON-encoded array'
             exit 1
           fi
+          tomls0=${{ fromJson(inputs.tomls) }}
           # Set flag, if the array is non-empty
           echo "firsttoml=${{ fromJson(inputs.tomls)[0] }}" >> "$GITHUB_OUTPUT"
 
