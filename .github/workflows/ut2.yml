@@ -24,6 +24,11 @@ jobs:
             reftype: 'tag'
             tomls: '["Cargo.toml"]'
             expectsuccess: true
+          - name: Nonexisting toml
+            refname: '0.2.4'
+            reftype: 'tag'
+            tomls: '["nonexisting.toml"]'
+            expectsuccess: true
 
   main:
     needs: [test]
