@@ -15,6 +15,7 @@ jobs:
       tomls: ${{ matrix.job.tomls }}
     strategy:
       matrix:
+        fail-fast: false
         job:
           - refname: '0.2.4'
             reftype: 'tag'
