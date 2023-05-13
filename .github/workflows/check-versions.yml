@@ -36,7 +36,7 @@ jobs:
     name: Validate parameter
     runs-on: ubuntu-latest
     steps:
-      - run:
+      - run: |
           ${{ startsWith('[', 'inputs.tomls') || endsWith(']', 'inputs.tomls') }} && exit 0
           echo '::error::Parameter tomls must be a JSON-encoded array }}"'
           exit 1
