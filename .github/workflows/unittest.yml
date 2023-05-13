@@ -51,7 +51,9 @@ jobs:
     with:
       refname: ${{ matrix.job.refname }}
       reftype: ${{ matrix,job.reftype }}
-      tomls: ${{ matrix,job.tomls }}
+      tomls: ${{ matrix.job.tomls }}
 
   main:
     needs: [test]
+    runs-on: ubuntu-latest
+    run: echo Hi
