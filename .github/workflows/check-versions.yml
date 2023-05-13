@@ -44,8 +44,12 @@ jobs:
             echo '::error::Parameter tomls must be a JSON-encoded array'
             exit 1
           fi
-      - id: getfirst
+      - id: debug
         if: steps.checkparam.conclusion == 'success'
+        run: |
+          echo "setps.checkparam=${{ toJson(steps.checkparam) }}"
+      - id: getfirst
+        if: ${{ steps.checkparam.conclusion == 'success' }}
         run: |
           echo "firsttoml=${{ fromJson(inputs.tomls)[0] }}" >> "$GITHUB_OUTPUT"
 
