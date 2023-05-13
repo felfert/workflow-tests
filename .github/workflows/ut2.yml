@@ -24,8 +24,6 @@ jobs:
             reftype: 'tag'
             tomls: '[]'
             expectsuccess: true
-    outputs:
-      foo: "bar"
 
   main:
     needs: [test]
@@ -33,4 +31,4 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       #- run: echo "${{ toJSON(needs.*) }}"
-      - run: echo "${{ needs.* }}"
+      - run: echo "${{ needs.*.matrix }}"
