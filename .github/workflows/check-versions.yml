@@ -37,7 +37,10 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - run:
-          echo '::notice::FirstToml="${{ fromJson(inputs.tomls)[0] }}"'
+          if ${{ !startsWith('[', 'inputs.tomls') || !endsWith('[', 'inputs.tomls') }} ; then
+            echo '::error::Parameter tomls mut be a JSON encoded array'
+            exit 1
+          fi
 
   semver:
     name: Validate SEMVER compliance
