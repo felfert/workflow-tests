@@ -45,7 +45,6 @@ jobs:
             exit 1
           fi
       - id: debug
-        if: steps.checkparam.conclusion == 'success'
         run: |
           echo "setps.checkparam=${{ toJson(steps.checkparam) }}"
       - id: getfirst
