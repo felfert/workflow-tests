@@ -75,4 +75,5 @@ jobs:
     if: always() && !cancelled()
     runs-on: ubuntu-latest
     steps:
-      - run: echo "${{ toJSON(needs.*) }}"
+      #- run: echo "${{ toJSON(needs.*) }}"
+      - run: echo "${{ needs.* }}"
