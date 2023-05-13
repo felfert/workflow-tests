@@ -32,13 +32,18 @@ on:
         default: ${{ github.ref_name }}
  
 jobs:
-  semver:
-    name: Validate SEMVER compliance
-    if: ${{ inputs.reftype == 'tag' }}
-    runs-on: ubuntu-latest
+  checkparam:
+    name: Validate parameter
     steps:
       - run:
           echo '::notice::FirstToml="${{ fromJson(inputs.tomls)[0] }}"'
+
+  semver:
+    name: Validate SEMVER compliance
+    needs: [checkparam]
+    if: ${{ inputs.reftype == 'tag' }}
+    runs-on: ubuntu-latest
+    steps:
       - uses: rubenesp87/semver-validation-action@0.1.0
         with:
           version: ${{ inputs.refname }}
