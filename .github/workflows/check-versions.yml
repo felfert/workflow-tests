@@ -30,6 +30,14 @@ on:
         required: false
         type: string
         default: ${{ github.ref_name }}
+      # The following parameter is used by tests only
+      name:
+        type: string
+        required: false
+        default: ''
+    outputs:
+      name: ${{ inputs.name }}
+      status: ${{ jobs.*.status }}
  
 jobs:
   checkparam:
