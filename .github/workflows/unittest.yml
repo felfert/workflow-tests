@@ -31,7 +31,7 @@ jobs:
       refname: '0.2.4'
       reftype: 'tag'
       tomls: '["Cargo.toml", "cherryrgb/Cargo.toml"]'
-      testattr: '{"expectsuccess":true}'
+      testattr: '{"name":"Normal tag","expectsuccess":true}'
 
   test2:
     name: Wrong version in toml
@@ -40,43 +40,34 @@ jobs:
       refname: '0.2.4'
       reftype: 'tag'
       tomls: '["Cargo-wrongversion.toml", "cherryrgb/Cargo.toml"]'
-      testattr: '{"expectsuccess":false}'
+      testattr: '{"name":"Wrong version in toml","expectsuccess":false}'
 
   test3:
-    name: Wrong version in toml
-    uses: ./.github/workflows/check-versions.yml 
-    with:
-      refname: '0.2.4'
-      reftype: 'tag'
-      tomls: '["Cargo-wrongversion.toml", "cherryrgb/Cargo.toml"]'
-      testattr: '{"expectsuccess":false}'
-
-  test4:
     name: Nonexistant toml
     uses: ./.github/workflows/check-versions.yml 
     with:
       refname: '0.2.4'
       reftype: 'tag'
       tomls: '["nonexistent.toml", "cherryrgb/Cargo.toml"]'
-      testattr: '{"expectsuccess":false}'
+      testattr: '{"name":"Nonexistent toml","expectsuccess":false}'
 
-  test5:
+  test4:
     name: Invalid JSON
     uses: ./.github/workflows/check-versions.yml 
     with:
       refname: '0.2.4'
       reftype: 'tag'
       tomls: 'invalidJSON'
-      testattr: '{"expectsuccess":false}'
+      testattr: '{"name":"Invalid JSON","expectsuccess":false}'
 
-  test6:
+  test5:
     name: Empty tomls
     uses: ./.github/workflows/check-versions.yml 
     with:
       refname: '0.2.4'
       reftype: 'tag'
       tomls: '[]'
-      testattr: '{"expectsuccess":true}'
+      testattr: '{"name":"Empty tomls","expectsuccess":true}'
 
   main:
     needs: [test1, test2, test3, test4, test4, test5, test6]
