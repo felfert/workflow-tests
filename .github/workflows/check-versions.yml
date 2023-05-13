@@ -52,12 +52,12 @@ jobs:
           version: ${{ inputs.refname }}
 
   getversion:
-    needs: [semver]
+    needs: [checkparam, semver]
     runs-on: ubuntu-latest
     # See https://github.com/actions/runner/issues/491 for an explanation of
     # the following weird conditional expression:
     if: |
-      always() && !cancelled() &&
+      always() && !cancelled() && (needs.checkparam.result == 'success') &&
       (needs.semver.result == 'success' || needs.semver.result == 'skipped')
     outputs:
       version: ${{ steps.setversion.outputs.version }}
@@ -78,12 +78,13 @@ jobs:
           fi
 
   tomls:
-    needs: [semver, getversion]
+    needs: [checkparam, semver, getversion]
     runs-on: ubuntu-latest
     # See https://github.com/actions/runner/issues/491 for an explanation of
     # the following weird conditional expression:
     if: |
-      always() && !cancelled() &&
+      always() && !cancelled() && (needs.checkparam.result == 'success') &&
+      (needs.getversion.result == 'success') &&
       (needs.semver.result == 'success' || needs.semver.result == 'skipped')
     strategy:
       matrix:
