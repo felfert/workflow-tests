@@ -36,16 +36,15 @@ jobs:
     name: Validate parameter
     runs-on: ubuntu-latest
     outputs:
-      firsttoml: ${{ steps.checkparam.outputs.firsttoml }}
+      firsttoml: ${{ steps.getfirst.outputs.firsttoml }}
     steps:
-      - id: checkparam
-        run: |
+      - run: |
           if [[ "${{ startsWith(inputs.tomls, '[') && endsWith(inputs.tomls, ']') }}" != 'true' ]] ; then
             echo '::error::Parameter tomls must be a JSON-encoded array'
             exit 1
           fi
-          tomls0=${{ fromJson(inputs.tomls) }}
-          # Set flag, if the array is non-empty
+      - id: getfirst
+        run: |
           echo "firsttoml=${{ fromJson(inputs.tomls)[0] }}" >> "$GITHUB_OUTPUT"
 
   semver:
