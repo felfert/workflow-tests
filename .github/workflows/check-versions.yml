@@ -30,36 +30,23 @@ on:
         required: false
         type: string
         default: ${{ github.ref_name }}
-      # The following parameters are used by tests only
-      expected:
-        type: boolean
-        required: false
-        default: false
-      name:
+      # The following parameter is used by tests only
+      testattr:
         type: string
         required: false
         default: ''
     outputs:
-      name:
-        description: The inputs.name
-        value: ${{ inputs.name }}
-      expected:
-        description: The inputs.expected
-        value ${{ inputs.expected }}
+      testattr:
+        description: Input testattr
+        value: ${{ inputs.testattr }}
  
 jobs:
 
   checkparam:
     name: Validate parameter
     runs-on: ubuntu-latest
-    outputs:
-      jname: ${{ steps.check.outputs.jname }}
-      expected: ${{ steps.check.outputs.expected }}
     steps:
-      - id: check
-        run: |
-          echo "jname=${{ inputs.jname }}" >> "$GITHUB_OUTPUT"
-          echo "expected=${{ inputs.expected }}" >> "$GITHUB_OUTPUT"
+      - run: |
           if [[ "${{ startsWith(inputs.tomls, '[') && endsWith(inputs.tomls, ']') }}" != 'true' ]] ; then
             echo '::error::Parameter tomls must be a JSON-encoded array'
             exit 1
