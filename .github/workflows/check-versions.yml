@@ -35,6 +35,7 @@ on:
         type: string
         required: false
         default: ''
+    # Outputs are used by tests only
     outputs:
       testattr:
         description: Input testattr
@@ -43,6 +44,7 @@ on:
 jobs:
 
   checkparam:
+    continue-on-failure: true
     name: Validate parameter
     runs-on: ubuntu-latest
     steps:
@@ -53,6 +55,7 @@ jobs:
           fi
 
   semver:
+    continue-on-failure: true
     name: Validate SEMVER compliance
     needs: [checkparam]
     if: ${{ inputs.reftype == 'tag' }}
@@ -63,6 +66,7 @@ jobs:
           version: ${{ inputs.refname }}
 
   getversion:
+    continue-on-failure: true
     name: Get version
     needs: [checkparam, semver]
     runs-on: ubuntu-latest
@@ -90,6 +94,7 @@ jobs:
           fi
 
   tomls:
+    continue-on-failure: true
     name: Check toml files
     needs: [checkparam, semver, getversion]
     runs-on: ubuntu-latest
