@@ -9,8 +9,6 @@ jobs:
 
   test:
     name: ${{ matrix.job.name }}
-    outputs:
-      foo: "bar"
     uses: ./.github/workflows/check-versions.yml 
     with:
       refname: '${{ matrix.job.refname }}'
@@ -26,6 +24,8 @@ jobs:
             reftype: 'tag'
             tomls: '[]'
             expectsuccess: true
+    outputs:
+      foo: "bar"
 
   main:
     needs: [test]
