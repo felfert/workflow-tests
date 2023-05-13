@@ -39,6 +39,7 @@ jobs:
 
   main:
     needs: [test]
+    if: always() && !cancelled()
     runs-on: ubuntu-latest
     steps:
       - run: echo $${{ toJSON(needs.test) }}
