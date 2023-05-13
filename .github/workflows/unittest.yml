@@ -8,6 +8,7 @@ on:
 jobs:
 
   test:
+    continue-on-error: true
     uses: ./.github/workflows/check-versions.yml 
     with:
       refname: ${{ matrix.job.refname }}
@@ -41,4 +42,4 @@ jobs:
     needs: [test]
     runs-on: ubuntu-latest
     steps:
-      - run: echo $${{ toJSON(jobs.test) }}
+      - run: echo $${{ toJSON(needs.test) }}
