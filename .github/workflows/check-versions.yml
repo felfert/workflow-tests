@@ -13,10 +13,6 @@ name: Check Versions
 
 on:
   workflow_call:
-    outputs:
-      jname: ${{ jobs.checkparam.outputs.jname }}
-      expected: ${{ jobs.checkparam.outputs.expected }}
-      #status: ${{ jobs.*.result }}
     inputs:
       tomls:
         description: 'A JSON-encoded array of paths to toml files to be checked'
@@ -39,12 +35,20 @@ on:
         type: boolean
         required: false
         default: false
-      jname:
+      name:
         type: string
         required: false
         default: ''
+    outputs:
+      name:
+        description: The inputs.name
+        value: ${{ inputs.name }}
+      expected:
+        description: The inputs.expected
+        value ${{ inputs.expected }}
  
 jobs:
+
   checkparam:
     name: Validate parameter
     runs-on: ubuntu-latest
