@@ -13,6 +13,10 @@ name: Check Versions
 
 on:
   workflow_call:
+    outputs:
+      jname: ${{ jobs.checkparam.outputs.jname }}
+      expected: ${{ jobs.checkparam.outputs.expected }}
+      #status: ${{ jobs.*.result }}
     inputs:
       tomls:
         description: 'A JSON-encoded array of paths to toml files to be checked'
@@ -39,11 +43,6 @@ on:
         type: string
         required: false
         default: ''
-    # Outputs are used by tests only
-    outputs:
-      jname: ${{ jobs.checkparam.outputs.jname }}
-      expected: ${{ jobs.checkparam.outputs.expected }}
-      status: ${{ jobs.*.status }}
  
 jobs:
   checkparam:
