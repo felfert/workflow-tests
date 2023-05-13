@@ -37,8 +37,8 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - run: |
-          ${{ startsWith('[', 'inputs.tomls') || endsWith(']', 'inputs.tomls') }} && exit 0
-          echo '::error::Parameter tomls must be a JSON-encoded array }}"'
+          ${{ startsWith(inputs.tomls, '[') && endsWith(inputs.tomls, ']') }} && exit 0
+          echo '::error::Parameter tomls must be a JSON-encoded array'
           exit 1
 
   semver:
