@@ -38,12 +38,14 @@ jobs:
     outputs:
       firsttoml: ${{ steps.getfirst.outputs.firsttoml }}
     steps:
-      - run: |
+      - id checkparam
+        run: |
           if [[ "${{ startsWith(inputs.tomls, '[') && endsWith(inputs.tomls, ']') }}" != 'true' ]] ; then
             echo '::error::Parameter tomls must be a JSON-encoded array'
             exit 1
           fi
       - id: getfirst
+        if: steps.checkparam.conclusion == 'success'
         run: |
           echo "firsttoml=${{ fromJson(inputs.tomls)[0] }}" >> "$GITHUB_OUTPUT"
 
