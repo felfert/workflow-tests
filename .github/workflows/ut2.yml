@@ -22,7 +22,7 @@ jobs:
           - name: Empty tomls
             refname: '0.2.4'
             reftype: 'tag'
-            tomls: '[]'
+            tomls: '["Cargo.toml"]'
             expectsuccess: true
 
   main:
