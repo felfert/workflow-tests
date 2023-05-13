@@ -41,7 +41,7 @@ jobs:
       reftype: 'tag'
       tomls: '["Cargo-wrongversion.toml", "cherryrgb/Cargo.toml"]'
 
-  test2:
+  test3:
     name: Wrong version in toml
     uses: ./.github/workflows/check-versions.yml 
     with:
@@ -49,7 +49,7 @@ jobs:
       reftype: 'tag'
       tomls: '["Cargo-wrongversion.toml", "cherryrgb/Cargo.toml"]'
 
-  test3:
+  test4:
     name: Nonexistant toml
     uses: ./.github/workflows/check-versions.yml 
     with:
@@ -57,7 +57,7 @@ jobs:
       reftype: 'tag'
       tomls: '["nonexistent.toml", "cherryrgb/Cargo.toml"]'
 
-  test4:
+  test5:
     name: Invalid JSON
     uses: ./.github/workflows/check-versions.yml 
     with:
@@ -65,7 +65,7 @@ jobs:
       reftype: 'tag'
       tomls: 'invalidJSON'
 
-  test5:
+  test6:
     name: Empty tomls
     uses: ./.github/workflows/check-versions.yml 
     with:
@@ -74,7 +74,7 @@ jobs:
       tomls: '[]'
 
   main:
-    needs: [test1, test2, test4, test4, test5]
+    needs: [test1, test2, test4, test4, test5, test6]
     if: always() && !cancelled()
     runs-on: ubuntu-latest
     steps:
