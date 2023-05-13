@@ -36,13 +36,15 @@ on:
         required: false
         default: ''
     outputs:
-      name: ${{ inputs.name }}
+      name: ${{ jobs.checkparam.outputs.name }}
       status: ${{ jobs.*.status }}
  
 jobs:
   checkparam:
     name: Validate parameter
     runs-on: ubuntu-latest
+    outputs:
+      name: ${{ inputs.name }}
     steps:
       - run: |
           if [[ "${{ startsWith(inputs.tomls, '[') && endsWith(inputs.tomls, ']') }}" != 'true' ]] ; then
