@@ -6,7 +6,11 @@ on:
 jobs:
 
   test:
-    continue-on-error: true
+    uses: ./.github/workflows/check-versions.yml 
+    with:
+      refname: ${{ matrix.job.refname }}
+      reftype: ${{ matrix.job.reftype }}
+      tomls: ${{ matrix.job.tomls }}
     strategy:
       matrix:
         job:
@@ -30,11 +34,6 @@ jobs:
             reftype: 'tag'
             tomls: '[]'
             expectsuccess: true
-    uses: ./.github/workflows/check-versions.yml 
-    with:
-      refname: ${{ matrix.job.refname }}
-      reftype: ${{ matrix.job.reftype }}
-      tomls: ${{ matrix.job.tomls }}
 
   main:
     needs: [test]
