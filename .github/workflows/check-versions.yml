@@ -45,6 +45,7 @@ jobs:
             exit 1
           fi
           # Set flag, if the array is non-empty
+          tomls0=${{ fromJson(inputs.tomls) }}
           echo "firsttoml=${{ fromJson(inputs.tomls)[0] }}" >> "$GITHUB_OUTPUT"
 
   semver:
