@@ -19,35 +19,63 @@ jobs:
       fail-fast: false
       matrix:
         job:
-          - name: Normal tag
-            refname: '0.2.4'
-            reftype: 'tag'
-            tomls: '["Cargo.toml", "cherryrgb/Cargo.toml"]'
-            expectsuccess: true
-          - name: Wrong version in toml
-            refname: '0.2.4'
-            reftype: 'tag'
-            tomls: '["Cargo-wrongversion.toml", "cherryrgb/Cargo.toml"]'
-            expectsuccess: false
-          - name: Nonexistant toml
-            refname: '0.2.4'
-            reftype: 'tag'
-            tomls: '["nonexistent.toml", "cherryrgb/Cargo.toml"]'
-            expectsuccess: false
-          - name: Invalid JSON
-            refname: '0.2.4'
-            reftype: 'tag'
-            tomls: 'invalidJSON'
-            expectsuccess: false
           - name: Empty tomls
             refname: '0.2.4'
             reftype: 'tag'
             tomls: '[]'
             expectsuccess: true
 
+  test1:
+    name: Normal tag
+    uses: ./.github/workflows/check-versions.yml 
+    with:
+      refname: '0.2.4'
+      reftype: 'tag'
+      tomls: '["Cargo.toml", "cherryrgb/Cargo.toml"]'
+
+  test2:
+    name: Wrong version in toml
+    uses: ./.github/workflows/check-versions.yml 
+    with:
+      refname: '0.2.4'
+      reftype: 'tag'
+      tomls: '["Cargo-wrongversion.toml", "cherryrgb/Cargo.toml"]'
+
+  test2:
+    name: Wrong version in toml
+    uses: ./.github/workflows/check-versions.yml 
+    with:
+      refname: '0.2.4'
+      reftype: 'tag'
+      tomls: '["Cargo-wrongversion.toml", "cherryrgb/Cargo.toml"]'
+
+  test3:
+    name: Nonexistant toml
+    uses: ./.github/workflows/check-versions.yml 
+    with:
+      refname: '0.2.4'
+      reftype: 'tag'
+      tomls: '["nonexistent.toml", "cherryrgb/Cargo.toml"]'
+
+  test4:
+    name: Invalid JSON
+    uses: ./.github/workflows/check-versions.yml 
+    with:
+      refname: '0.2.4'
+      reftype: 'tag'
+      tomls: 'invalidJSON'
+
+  test5:
+    name: Empty tomls
+    uses: ./.github/workflows/check-versions.yml 
+    with:
+      refname: '0.2.4'
+      reftype: 'tag'
+      tomls: '[]'
+
   main:
-    needs: [test]
+    needs: [test1, test2, test4, test4, test5]
     if: always() && !cancelled()
     runs-on: ubuntu-latest
     steps:
-      - run: echo "${{ toJSON(needs.test) }}"
+      - run: echo "${{ toJSON(needs.test1) }}"

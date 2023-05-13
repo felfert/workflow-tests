@@ -44,7 +44,6 @@ on:
 jobs:
 
   checkparam:
-    continue-on-error: true
     name: Validate parameter
     runs-on: ubuntu-latest
     steps:
@@ -55,7 +54,6 @@ jobs:
           fi
 
   semver:
-    continue-on-error: true
     name: Validate SEMVER compliance
     needs: [checkparam]
     if: ${{ inputs.reftype == 'tag' }}
@@ -66,7 +64,6 @@ jobs:
           version: ${{ inputs.refname }}
 
   getversion:
-    continue-on-error: true
     name: Get version
     needs: [checkparam, semver]
     runs-on: ubuntu-latest
@@ -94,7 +91,6 @@ jobs:
           fi
 
   tomls:
-    continue-on-error: true
     name: Check toml files
     needs: [checkparam, semver, getversion]
     runs-on: ubuntu-latest
