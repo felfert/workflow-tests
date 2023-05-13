@@ -37,10 +37,9 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - run:
-          if ${{ !startsWith('[', 'inputs.tomls') || !endsWith(']', 'inputs.tomls') }} ; then
-            echo '::error::Parameter tomls must be a JSON-encoded array }}"'
-            exit 1
-          fi
+          ${{ startsWith('[', 'inputs.tomls') || endsWith(']', 'inputs.tomls') }} && exit 0
+          echo '::error::Parameter tomls must be a JSON-encoded array }}"'
+          exit 1
 
   semver:
     name: Validate SEMVER compliance
