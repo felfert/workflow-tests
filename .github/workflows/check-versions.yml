@@ -36,7 +36,7 @@ jobs:
     name: Validate parameter
     runs-on: ubuntu-latest
     outputs:
-      havesamls: ${{ steps.checkparam.outputs.havesamls }}
+      hastomls: ${{ steps.checkparam.outputs.hastomls }}
     steps:
       - id: checkparam
         run: |
@@ -44,7 +44,8 @@ jobs:
             echo '::error::Parameter tomls must be a JSON-encoded array'
             exit 1
           fi
-          echo "havesamls=${{ fromJson(inputs.tomls)[0] != '' }}" >> "$GITHUB_OUTPUT"
+          # Set flag, if the array is non-empty
+          echo "hastomls=${{ fromJson(inputs.tomls).length }}" >> "$GITHUB_OUTPUT"
 
   semver:
     name: Validate SEMVER compliance
@@ -69,7 +70,7 @@ jobs:
     steps:
       - uses: actions/checkout@v3
       - id: readtoml
-        if: ${{ needs.semver.result == 'skipped' && needs.checkparam.havesamls == 'true' }}
+        if: ${{ needs.semver.result == 'skipped' && needs.checkparam.hastomls == 'true' }}
         uses: SebRollen/toml-action@v1.0.2
         with:
           file: "${{ fromJson(inputs.tomls)[0] }}"
