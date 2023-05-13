@@ -70,7 +70,7 @@ jobs:
       testattr: '{"name":"Empty tomls","expectsuccess":true}'
 
   main:
-    needs: [test1, test2, test3, test4, test4, test5, test6]
+    needs: [test1, test2, test3, test4, test4, test5]
     if: always() && !cancelled()
     runs-on: ubuntu-latest
     steps:
