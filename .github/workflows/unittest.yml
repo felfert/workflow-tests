@@ -8,6 +8,7 @@ on:
 jobs:
 
   test:
+    name: ${{ matrix.job.name }}
     uses: ./.github/workflows/check-versions.yml 
     with:
       refname: ${{ matrix.job.refname }}
@@ -17,23 +18,28 @@ jobs:
       fail-fast: false
       matrix:
         job:
-          - refname: '0.2.4'
+          - name: Normal tag
+            refname: '0.2.4'
             reftype: 'tag'
             tomls: '["Cargo.toml", "cherryrgb/Cargo.toml"]'
             expectsuccess: true
-          - refname: '0.2.4'
+          - name: Wrong version in toml
+            refname: '0.2.4'
             reftype: 'tag'
             tomls: '["Cargo-wrongversion.toml", "cherryrgb/Cargo.toml"]'
             expectsuccess: false
-          - refname: '0.2.4'
+          - name: Nonexistant toml
+            refname: '0.2.4'
             reftype: 'tag'
             tomls: '["nonexistent.toml", "cherryrgb/Cargo.toml"]'
             expectsuccess: false
-          - refname: '0.2.4'
+          - name: Invalid JSON
+            refname: '0.2.4'
             reftype: 'tag'
             tomls: 'invalidJSON'
             expectsuccess: false
-          - refname: '0.2.4'
+          - name: Empty tomls
+            refname: '0.2.4'
             reftype: 'tag'
             tomls: '[]'
             expectsuccess: true
