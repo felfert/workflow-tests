@@ -1,0 +1,57 @@
+name: UT check-versions
+
+on:
+  workflow_dispatch:
+#    inputs:
+#      refname:
+#        required: true
+#        description: 'Version or Tag'     
+#        type: string
+#      reftype:
+#        required: true
+#        description: 'Type of refname'
+#        type: choice
+#        options:
+#          - tag
+#          - branch
+
+jobs:
+
+  test:
+    continue-on-error: true
+    strategy:
+      matrix:
+        job:
+          - os: ubuntu-latest
+            refname: '0.2.4'
+            reftype: 'tag'
+            tomls: '["Cargo.toml", "cherryrgb/Cargo.toml"]'
+            expectsuccess: true
+          - os: ubuntu-latest
+            refname: '0.2.4'
+            reftype: 'tag'
+            tomls: '["Cargo-falsch.toml", "cherryrgb/Cargo.toml"]'
+            expectsuccess: false
+          - os: ubuntu-latest
+            refname: '0.2.4'
+            reftype: 'tag'
+            tomls: '["gibsnich", "cherryrgb/Cargo.toml"]'
+            expectsuccess: false
+          - os: ubuntu-latest
+            refname: '0.2.4'
+            reftype: 'tag'
+            tomls: 'invalidJSON'
+            expectsuccess: false
+          - os: ubuntu-latest
+            refname: '0.2.4'
+            reftype: 'tag'
+            tomls: '[]'
+            expectsuccess: true
+    uses: ./.github/workflows/check-versions.yml 
+      with:
+      refname: ${{ matrix.job.refname }}
+      reftype: ${{ matrix,job.reftype }}
+      tomls: ${{ matrix,job.tomls }}
+
+  main:
+    needs: [test]

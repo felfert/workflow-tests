@@ -53,6 +53,7 @@ jobs:
           version: ${{ inputs.refname }}
 
   getversion:
+    name: Get version
     needs: [checkparam, semver]
     runs-on: ubuntu-latest
     # See https://github.com/actions/runner/issues/491 for an explanation of
@@ -79,6 +80,7 @@ jobs:
           fi
 
   tomls:
+    name: Check toml files
     needs: [checkparam, semver, getversion]
     runs-on: ubuntu-latest
     # See https://github.com/actions/runner/issues/491 for an explanation of
