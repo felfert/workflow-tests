@@ -34,6 +34,7 @@ on:
 jobs:
   checkparam:
     name: Validate parameter
+    runs-on: ubuntu-latest
     steps:
       - run:
           echo '::notice::FirstToml="${{ fromJson(inputs.tomls)[0] }}"'
