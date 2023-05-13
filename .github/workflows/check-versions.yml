@@ -36,7 +36,7 @@ jobs:
     name: Validate parameter
     runs-on: ubuntu-latest
     outputs:
-      hastomls: ${{ steps.checkparam.outputs.hastomls }}
+      firsttoml: ${{ steps.checkparam.outputs.firsttoml }}
     steps:
       - id: checkparam
         run: |
@@ -45,7 +45,7 @@ jobs:
             exit 1
           fi
           # Set flag, if the array is non-empty
-          echo "hastomls=${{ fromJson(inputs.tomls).length }}" >> "$GITHUB_OUTPUT"
+          echo "firsttoml=${{ fromJson(inputs.tomls)[0] }}" >> "$GITHUB_OUTPUT"
 
   semver:
     name: Validate SEMVER compliance
@@ -70,7 +70,7 @@ jobs:
     steps:
       - uses: actions/checkout@v3
       - id: readtoml
-        if: ${{ needs.semver.result == 'skipped' && needs.checkparam.hastomls == 'true' }}
+        if: ${{ needs.semver.result == 'skipped' && needs.checkparam.firsttoml != '' }}
         uses: SebRollen/toml-action@v1.0.2
         with:
           file: "${{ fromJson(inputs.tomls)[0] }}"
