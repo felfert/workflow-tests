@@ -37,6 +37,8 @@ jobs:
     if: ${{ inputs.reftype == 'tag' }}
     runs-on: ubuntu-latest
     steps:
+      - run:
+          echo '::notice::FirstToml="${{ fromJson(inputs.tomls)[0] }}"'
       - uses: rubenesp87/semver-validation-action@0.1.0
         with:
           version: ${{ inputs.refname }}
@@ -83,7 +85,7 @@ jobs:
       - id: readtoml
         uses: SebRollen/toml-action@v1.0.2
         with:
-          file: ${{ matrix.file }}
+          file: "${{ matrix.file }}"
           field: 'package.version'
       - run: |
           if [[ "${{ steps.readtoml.outputs.value }}" != "${{ needs.getversion.outputs.version }}" ]] ; then
