@@ -18,40 +18,40 @@ jobs:
           - name: No tomls
             refname: '0.2.4'
             reftype: 'tag'
-            expectsuccess: true
+            expected: 'success'
           - name: Nonexisting toml
             refname: '0.2.4'
             reftype: 'tag'
             tomls: nonexisting.toml
-            expectsuccess: false
+            expected: 'failure'
           - name: Normal tag
             refname: '0.2.4'
             reftype: 'tag'
             tomls: |
               Cargo.toml
               cherryrgb/Cargo.toml
-            expectsuccess: true
+            expected: 'success'
           - name: Wrong version in toml
             refname: '0.2.4'
             reftype: 'tag'
             tomls: |
               Cargo-wrongversion.toml
               cherryrgb/Cargo.toml
-            expectsuccess: false
+            expected: 'failure'
           - name: Bad tag
             refname: 'foobar'
             reftype: 'tag'
             tomls: |
               Cargo.toml
               cherryrgb/Cargo.toml
-            expectsuccess: false
+            expected: 'failure'
           - name: Normal branch
             refname: 'master'
             reftype: 'branch'
             tomls: |
               Cargo.toml
               cherryrgb/Cargo.toml
-            expectsuccess: true
+            expected: 'success'
     steps:
       - uses: actions/checkout@v3
       - id: testaction
@@ -62,7 +62,7 @@ jobs:
           tomls: ${{ matrix.job.tomls }}
       - id: result
         run: |
-          if [ ${{ steps.testaction.outcome == matrix.job.expectsuccess ] ; then
+          if ${{ steps.testaction.outcome == matrix.job.expected }} ; then
             echo "testok=true" >> "$GITHUB_OUTPUT"
           else
             echo "testok=false" >> "$GITHUB_OUTPUT"
