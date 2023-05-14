@@ -12,7 +12,6 @@ inputs:
   tomls:
     description: An array of Cargo.toml paths to check
     required: false
-    default: []
 runs:
   using: 'node16'
   main: 'index.js'
