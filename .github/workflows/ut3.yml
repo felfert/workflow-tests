@@ -63,7 +63,8 @@ jobs:
         uses: actions/cache@v3
         with:
           path: results
-          key: ${{ github.workflow }}_testresults
+          key: ${{ github.workflow }}_testresults-${{ github.job }}
+          restore-keys: ${{ github.workflow }}_testresults
       - if: always() && !cancelled()
         run: |
           mkdir -p results
@@ -75,7 +76,8 @@ jobs:
         uses: actions/cache@v3
         with:
           path: results
-          key: ${{ github.workflow }}_testresults
+          key: ${{ github.workflow }}_testresults-${{ github.job }}
+          restore-keys: ${{ github.workflow }}_testresults
 
   main:
     needs: [test]
@@ -85,5 +87,6 @@ jobs:
       - uses: actions/cache@v3
         with:
           path: results
-          key: ${{ github.workflow }}_testresults
+          key: ${{ github.workflow }}_testresults-${{ github.job }}
+          restore-keys: ${{ github.workflow }}_testresults
       - run: ls results/
