@@ -1,0 +1,38 @@
+name: UT for validate-versions
+
+on:
+  workflow_dispatch:
+
+jobs:
+
+  test:
+    runs-on: ubuntu-latest
+    name: ${{ matrix.job.name }}
+    strategy:
+      fail-fast: false
+      matrix:
+        job:
+          - name: Empty tomls
+            refname: '0.2.4'
+            reftype: 'tag'
+            tomls: []
+            expectsuccess: true
+          - name: Nonexisting toml
+            refname: '0.2.4'
+            reftype: 'tag'
+            tomls: ["nonexisting.toml"]
+            expectsuccess: true
+    steps:
+      - uses: actions/checkout@v3
+      - uses: ./.github/actions/validate-versions
+        with:
+          refname: ${{ matrix.job.refname }}
+          reftype: ${{ matrix.job.reftype }}
+          tomls: ${{ matrix.job.tomls }}
+
+  main:
+    needs: [test]
+    if: always() && !cancelled()
+    runs-on: ubuntu-latest
+    steps:
+      - run: echo "${{ toJSON(needs.*) }}"

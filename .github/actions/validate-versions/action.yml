@@ -1,0 +1,18 @@
+name: 'Validate versions'
+description: 'Validate versions of Cargo.toml files and make shure that all files have the same package.version'
+inputs:
+  reftype:
+    description: The current github ref type
+    required: false
+    default: ${{ github.ref_name }}
+  refname:
+    description: The current github ref name
+    required: false
+    default: ${{ github.ref_type }}
+  tomls:
+    description: An array of Cargo.toml paths to check
+    required: false
+    default: []
+runs:
+  using: 'node16'
+  main: 'index.js'
