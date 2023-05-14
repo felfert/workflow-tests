@@ -68,6 +68,7 @@ jobs:
           else
             echo "testok=false" >> "$GITHUB_OUTPUT"
           fi
+          cat "$GITHUB_OUTPUT"
 
   main:
     needs: [test]
