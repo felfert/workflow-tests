@@ -63,12 +63,9 @@ jobs:
       - id: result
         if: always()
         run: |
-          if ${{ steps.testaction.outcome == matrix.job.expected }} ; then
-            echo "testok=true" >> "$GITHUB_OUTPUT"
-          else
+          if ${{ steps.testaction.outcome != matrix.job.expected }} ; then
             echo "testok=false" >> "$GITHUB_OUTPUT"
           fi
-          cat "$GITHUB_OUTPUT"
 
   main:
     needs: [test]
