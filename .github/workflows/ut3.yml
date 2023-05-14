@@ -61,7 +61,7 @@ jobs:
           reftype: ${{ matrix.job.reftype }}
           tomls: ${{ matrix.job.tomls }}
       - id: result
-        if: always() && !cancelled() && ( steps.test.outcome != matrix.job.expected }} )
+        if: always() && !cancelled() && ( steps.test.outcome != matrix.job.expected )
         run: echo "testfailed=true" >> "$GITHUB_RESULT"
 
   main:
