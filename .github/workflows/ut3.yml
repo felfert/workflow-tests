@@ -7,7 +7,6 @@ jobs:
 
   test:
     runs-on: ubuntu-latest
-    continue-on-error: true
     name: ${{ matrix.job.name }}
     strategy:
       fail-fast: false
@@ -53,6 +52,7 @@ jobs:
     steps:
       - uses: actions/checkout@v3
       - id: test
+        continue-on-error: true
         uses: ./.github/actions/validate-versions
         with:
           refname: ${{ matrix.job.refname }}
@@ -62,7 +62,7 @@ jobs:
         run: |
           mkdir -p results
           if ${{ steps.test.outcome != matrix.job.expected }} ; then
-            touch "results/$(echo ${{ matrix.job.name }} | tr " " _).failed"
+            echo '::error::"${{ matrix.job.name }}" has failed'
           fi
 
   main:
