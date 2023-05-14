@@ -12,15 +12,14 @@ jobs:
       fail-fast: false
       matrix:
         job:
-          - name: Empty tomls
+          - name: No tomls
             refname: '0.2.4'
             reftype: 'tag'
             expectsuccess: true
           - name: Nonexisting toml
             refname: '0.2.4'
             reftype: 'tag'
-            tomls: |
-              nonexisting.toml
+            tomls: nonexisting.toml
             expectsuccess: true
     steps:
       - uses: actions/checkout@v3
