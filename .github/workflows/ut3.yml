@@ -61,6 +61,7 @@ jobs:
           reftype: ${{ matrix.job.reftype }}
           tomls: ${{ matrix.job.tomls }}
       - id: result
+        if: always()
         run: |
           if ${{ steps.testaction.outcome == matrix.job.expected }} ; then
             echo "testok=true" >> "$GITHUB_OUTPUT"
