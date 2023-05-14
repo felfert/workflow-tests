@@ -11994,7 +11994,7 @@ try {
   }
   tomls.forEach(function(f) {
       console.log(`Validating ${f}`);
-      var tversion = readversion(f);
+      var tversion = readVersion(f);
       console.log(`Validating version ${tversion} in ${f}`);
       validateSemver(tversion);
       if (tversion != version) {
