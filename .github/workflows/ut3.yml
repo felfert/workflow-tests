@@ -7,6 +7,8 @@ jobs:
 
   test:
     runs-on: ubuntu-latest
+    outputs:
+      tesfailed: ${{ steps.result.testfailed }}
     name: ${{ matrix.job.name }}
     strategy:
       fail-fast: false
@@ -58,12 +60,9 @@ jobs:
           refname: ${{ matrix.job.refname }}
           reftype: ${{ matrix.job.reftype }}
           tomls: ${{ matrix.job.tomls }}
-      - if: always() && !cancelled()
-        run: |
-          mkdir -p results
-          if ${{ steps.test.outcome != matrix.job.expected }} ; then
-            echo '::error::"${{ matrix.job.name }}" has failed'
-          fi
+      - id: result
+        if: always() && !cancelled() && ( steps.test.outcome != matrix.job.expected }} )
+        run: echo "testfailed=true" >> "$GITHUB_RESULT"
 
   main:
     needs: [test]
