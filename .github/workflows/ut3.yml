@@ -56,7 +56,7 @@ jobs:
               Cargo.toml
               blubb.toml
               cherryrgb/Cargo.toml
-            expected: 'success'
+            expected: 'failure'
     steps:
       - uses: actions/checkout@v3
       - id: test
