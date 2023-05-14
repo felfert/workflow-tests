@@ -10,7 +10,7 @@ inputs:
     required: false
     default: ${{ github.ref_type }}
   tomls:
-    description: An array of Cargo.toml paths to check
+    description: One or more Cargo.toml paths to check, specified as a multiline input
     required: false
 runs:
   using: 'node16'

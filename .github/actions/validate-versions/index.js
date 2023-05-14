@@ -11983,7 +11983,7 @@ function readVersion(file) {
 try {
   var version = core.getInput('refname');
   const reftype = core.getInput('reftype');
-  const tomls = core.getInput('tomls');
+  const tomls = core.getMultilineInput('tomls');
   if (reftype == 'tag') {
   console.log(`Validating version ${version} from tag`);
       validateSemver(version);
