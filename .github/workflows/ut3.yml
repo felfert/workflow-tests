@@ -42,7 +42,7 @@ jobs:
             tomls: |
               Cargo.toml
               cherryrgb/Cargo.toml
-            expected: 'xfailure'
+            expected: 'failure'
           - name: Normal branch
             refname: 'master'
             reftype: 'branch'
@@ -59,34 +59,15 @@ jobs:
           reftype: ${{ matrix.job.reftype }}
           tomls: ${{ matrix.job.tomls }}
       - if: always() && !cancelled()
-        name: Fetch result cache
-        uses: actions/cache@v3
-        with:
-          path: results
-          key: ${{ github.workflow }}_testresults-${{ github.job }}
-          restore-keys: ${{ github.workflow }}_testresults
-      - if: always() && !cancelled()
         run: |
           mkdir -p results
           if ${{ steps.test.outcome != matrix.job.expected }} ; then
             touch "results/$(echo ${{ matrix.job.name }} | tr " " _).failed"
           fi
-      - if: always() && !cancelled()
-        name: Update result cache
-        uses: actions/cache@v3
-        with:
-          path: results
-          key: ${{ github.workflow }}_testresults-${{ github.job }}
-          restore-keys: ${{ github.workflow }}_testresults
 
   main:
     needs: [test]
     if: always() && !cancelled()
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/cache@v3
-        with:
-          path: results
-          key: ${{ github.workflow }}_testresults-${{ github.job }}
-          restore-keys: ${{ github.workflow }}_testresults
-      - run: ls results/
+      - run: echo ${{ toJSON(needs.test) }}
