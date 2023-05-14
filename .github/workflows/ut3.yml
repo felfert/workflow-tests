@@ -7,6 +7,9 @@ jobs:
 
   test:
     runs-on: ubuntu-latest
+    continue-on-error: true
+    outputs:
+      testok: ${{ steps.result.outputs.testok }}
     name: ${{ matrix.job.name }}
     strategy:
       fail-fast: false
@@ -51,11 +54,19 @@ jobs:
             expectsuccess: true
     steps:
       - uses: actions/checkout@v3
-      - uses: ./.github/actions/validate-versions
+      - id: testaction
+        uses: ./.github/actions/validate-versions
         with:
           refname: ${{ matrix.job.refname }}
           reftype: ${{ matrix.job.reftype }}
           tomls: ${{ matrix.job.tomls }}
+      - id: result
+        run: |
+          if [ ${{ steps.testaction.outcome == matrix.job.expectsuccess ] ; then
+            echo "testok=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "testok=false" >> "$GITHUB_OUTPUT"
+          fi
 
   main:
     needs: [test]
