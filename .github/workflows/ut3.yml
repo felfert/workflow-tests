@@ -49,6 +49,14 @@ jobs:
               Cargo.toml
               cherryrgb/Cargo.toml
             expected: 'success'
+          - name: Branch with missing toml
+            refname: 'master'
+            reftype: 'branch'
+            tomls: |
+              Cargo.toml
+              blubb.toml
+              cherryrgb/Cargo.toml
+            expected: 'success'
     steps:
       - uses: actions/checkout@v3
       - id: test
