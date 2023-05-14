@@ -28,6 +28,27 @@ jobs:
               Cargo.toml
               cherryrgb/Cargo.toml
             expectsuccess: true
+          - name: Wrong version in toml
+            refname: '0.2.4'
+            reftype: 'tag'
+            tomls: |
+              Cargo-wrongversion.toml
+              cherryrgb/Cargo.toml
+            expectsuccess: false
+          - name: Bad tag
+            refname: 'foobar'
+            reftype: 'tag'
+            tomls: |
+              Cargo.toml
+              cherryrgb/Cargo.toml
+            expectsuccess: false
+          - name: Normal branch
+            refname: 'master'
+            reftype: 'branch'
+            tomls: |
+              Cargo.toml
+              cherryrgb/Cargo.toml
+            expectsuccess: true
     steps:
       - uses: actions/checkout@v3
       - uses: ./.github/actions/validate-versions
