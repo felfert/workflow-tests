@@ -1,4 +1,4 @@
-name: UT for validate-versions
+name: UT for validate-versions action
 
 on:
   workflow_dispatch:
