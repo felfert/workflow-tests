@@ -8,8 +8,6 @@ jobs:
   test:
     runs-on: ubuntu-latest
     continue-on-error: true
-    outputs:
-      testok: ${{ steps.result.outputs.testok }}
     name: ${{ matrix.job.name }}
     strategy:
       fail-fast: false
@@ -54,22 +52,39 @@ jobs:
             expected: 'success'
     steps:
       - uses: actions/checkout@v3
-      - id: testaction
+      - id: test
         uses: ./.github/actions/validate-versions
         with:
           refname: ${{ matrix.job.refname }}
           reftype: ${{ matrix.job.reftype }}
           tomls: ${{ matrix.job.tomls }}
-      - id: result
-        if: always()
+      - if: always() && !cancelled()
+        name: Fetch result cache
+        uses: actions/cache@v3
+        with:
+          path: results
+        key: ${{ github.workflow }}_testresults
+      - if: always() && !cancelled()
         run: |
-          if ${{ steps.testaction.outcome != matrix.job.expected }} ; then
-            echo "testok=false" >> "$GITHUB_OUTPUT"
+          mkdir -p results
+          if ${{ steps.test.outcome != matrix.job.expected }} ; then
+            touch "results/$(echo ${{ matrix.job.name }} | tr " " _).failed"
           fi
+      - if: always() && !cancelled()
+        name: Update result cache
+        uses: actions/cache@v3
+        with:
+          path: results
+        key: ${{ github.workflow }}_testresults
 
   main:
     needs: [test]
     if: always() && !cancelled()
     runs-on: ubuntu-latest
     steps:
-      - run: echo "${{ toJSON(needs.*) }}"
+      - uses: actions/cache@v3
+        with:
+        path: results
+        key: ${{ github.workflow }}_testresults
+    steps:
+      - run: ls results/
