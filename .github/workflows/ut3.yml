@@ -44,7 +44,7 @@ jobs:
             tomls: |
               Cargo.toml
               cherryrgb/Cargo.toml
-            expected: 'failure'
+            expected: 'xfailure'
           - name: Normal branch
             refname: 'master'
             reftype: 'branch'
