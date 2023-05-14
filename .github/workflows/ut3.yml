@@ -20,6 +20,13 @@ jobs:
             refname: '0.2.4'
             reftype: 'tag'
             tomls: nonexisting.toml
+            expectsuccess: false
+          - name: Normal tag
+            refname: '0.2.4'
+            reftype: 'tag'
+            tomls: |
+              Cargo.toml
+              cherryrgb/Cargo.toml
             expectsuccess: true
     steps:
       - uses: actions/checkout@v3
