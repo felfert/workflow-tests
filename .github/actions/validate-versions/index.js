@@ -14467,7 +14467,8 @@ async function main() {
   const patterns = core.getMultilineInput('tomls');
   // If refname is 'branch', then the first toml is taken as a reference.
   // Therefore we sort by path length, so that the toplevel toml comes first.
-  const tomls = (globIfNecessary(patterns, true)).sort((a, b) => a.split(/[/\\]/).length - b.split(/[/\\]/).length);
+  var unsorted = globIfNecessary(patterns, true);
+  const tomls = unsorted.sort((a, b) => a.split(/[/\\]/).length - b.split(/[/\\]/).length);
 
   if (reftype == 'tag') {
       console.log(`Validating version ${version} from tag`);
