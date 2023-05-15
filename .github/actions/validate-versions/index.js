@@ -14445,7 +14445,7 @@ function readVersion(file) {
 async function globIfNecessary(patterns, follow) {
     const re = /(^~)|([*?[\]])/g;
     var result = [];
-    const verbatim = [];
+    const verbatim  = [];
     const toglob = [];
     patterns.forEach(function (p) {
         if (p.match(re)) {
@@ -14472,6 +14472,7 @@ async function main() {
   // If refname is 'branch', then the first toml is taken as a reference.
   // Therefore we sort by path length, so that the toplevel toml comes first.
   var unsorted = globIfNecessary(patterns, true);
+  console.log(typeof unsorted);
   const tomls = unsorted.sort((a, b) => a.split(/[/\\]/).length - b.split(/[/\\]/).length);
 
   if (reftype == 'tag') {
