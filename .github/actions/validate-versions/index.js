@@ -14502,6 +14502,7 @@ async function main() {
       const tversion = readVersion(f);
       // If version is a object and has a boolean member 'workspace' set to true
       // and the file is not in the toplevel dir
+      console.debug(typeof tversion);
       if (typeof tversion  == 'object') {
           if (Object.hasOwn(tversion, 'workspace')) {
               if (tversion['workspace'] === true) {
