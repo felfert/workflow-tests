@@ -68,3 +68,13 @@ jobs:
           tomls: ${{ matrix.job.tomls }}
       - if: always() && !cancelled() && ( steps.test.outcome != matrix.job.expected )
         run: exit 1
+
+  testdefaults:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - uses: ./.github/actions/validate-versions
+        with:
+          tomls: |
+            Cargo.toml
+            cherryrgb/Cargo.toml
