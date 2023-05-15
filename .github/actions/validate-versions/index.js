@@ -14455,21 +14455,25 @@ async function globIfNecessary(patterns, follow) {
         }
     });
     if (toglob.length > 0) {
-        const globber = await glob.create(toglob.join('\n'), {followSymbolicLinks: follow});
+        const globber = await glob.create(toglob.join('\n'), {
+            followSymbolicLinks: follow,
+            implicitDescendants: false,
+            matchDirectories: false,
+            omitBrokenSymbolicLinks: false
+        });
         result = await globber.glob();
     }
     return result.concat(verbatim);
 }
 
 async function main() {
+  const follow = core.getInput('followSymlinks');
   var version = core.getInput('refname');
   const reftype = core.getInput('reftype');
   const patterns = core.getMultilineInput('tomls');
   // If refname is 'branch', then the first toml is taken as a reference.
   // Therefore we sort by path length, so that the toplevel toml comes first.
-  //var unsorted = await globIfNecessary(patterns, true);
-  //const tomls = unsorted.sort((a, b) => a.split(/[/\\]/).length - b.split(/[/\\]/).length);
-  const tomls = (await globIfNecessary(patterns, true)).sort((a, b) => a.split(/[/\\]/).length - b.split(/[/\\]/).length);
+  const tomls = (await globIfNecessary(patterns, follow)).sort((a, b) => a.split(/[/\\]/).length - b.split(/[/\\]/).length);
 
   if (reftype == 'tag') {
       console.log(`Validating version ${version} from tag`);
@@ -14480,7 +14484,9 @@ async function main() {
           const tmp = readVersion(f);
           if (typeof tmp == 'string') {
               version = tmp;
+              console.log(`Validating version ${version} in ${f}`);
               validateSemver(version);
+              console.log(`Version ${version} taken as reference for further comparisons`)
           } else {
               core.setFailed(`Version in ${f} is not a string`);
           }
