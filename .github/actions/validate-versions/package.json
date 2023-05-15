@@ -1,0 +1,43 @@
+{
+  "name": "validate-versions",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "dependencies": {
+    "@actions/core": "^1.10.0",
+    "@actions/github": "^5.1.1",
+    "@actions/glob": "^0.4.0",
+    "@iarna/toml": "^2.2.5",
+    "@vercel/ncc": "^0.36.1",
+    "balanced-match": "^1.0.2",
+    "before-after-hook": "^2.2.3",
+    "brace-expansion": "^1.1.11",
+    "concat-map": "^0.0.1",
+    "deprecation": "^2.3.1",
+    "is-plain-object": "^5.0.0",
+    "minimatch": "^3.1.2",
+    "node-fetch": "^2.6.11",
+    "once": "^1.4.0",
+    "tr46": "^0.0.3",
+    "tunnel": "^0.0.6",
+    "universal-user-agent": "^6.0.0",
+    "uuid": "^8.3.2",
+    "webidl-conversions": "^3.0.1",
+    "whatwg-url": "^5.0.0",
+    "wrappy": "^1.0.2"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/felfert/validate-versions.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/felfert/validate-versions/issues"
+  },
+  "homepage": "https://github.com/felfert/validate-versions#readme"
+}

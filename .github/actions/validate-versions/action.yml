@@ -10,8 +10,12 @@ inputs:
     required: false
     default: ${{ github.ref_name }}
   tomls:
-    description: One or more Cargo.toml paths to check, specified as a multiline input
+    description: One or more file glob patterns to check, specified as a multiline input
     required: false
+  followSymlinks:
+    description: Follow symbolic links when globbing
+    required: false
+    default: false
 runs:
   using: 'node16'
   main: 'index.js'
