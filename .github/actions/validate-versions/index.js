@@ -14415,14 +14415,18 @@ function validateSemver(version) {
 }
 
 function readVersion(file) {
-    const fields = ['package', 'version'];
-    var str = fs.readFileSync(file);
-    var parsed = toml.parse(str);
-    var value = parsed;
-    fields.forEach(function (f) {
-        value = value[f];
-    });
-    return value;
+    try {
+        const fields = ['package', 'version'];
+        var str = fs.readFileSync(file);
+        var parsed = toml.parse(str);
+        var value = parsed;
+        fields.forEach(function (f) {
+            value = value[f];
+        });
+        return value;
+    } catch (error) {
+        core.setFailed(error.message);
+    }
 }
 
 // githubs's glob toolkit has a bug (or unexpected behavior):
