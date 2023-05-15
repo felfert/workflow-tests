@@ -14444,7 +14444,7 @@ function readVersion(file) {
 //
 async function globIfNecessary(patterns, follow) {
     const re = /(^~)|([*?[\]])/g;
-    const result = [];
+    var result = [];
     const verbatim = [];
     const toglob = [];
     patterns.forEach(function (p) {
