@@ -14480,9 +14480,11 @@ async function main() {
           const tmp = readVersion(f);
           if (typeof tmp == 'string') {
               version = tmp;
+              validateSemver(version);
           } else {
               core.setFailed(`Version in ${f} is not a string`);
           }
+          tomls.shift();
       }
   }
   tomls.forEach(function(f) {
