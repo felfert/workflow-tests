@@ -14430,10 +14430,10 @@ async function main() {
   const reftype = core.getInput('reftype');
   const patterns = core.getMultilineInput('tomls').join('\n');
   const globber = await glob.create(patterns, {followSymbolicLinks: false});
-  const unsorted = await globber.glob();
   // If refname is 'branch', then the first toml is taken as a reference.
   // Therefore we sort by path length, so that the toplevel toml comes first.
-  const tomls = unsorted.toSorted((a, b) => a.split(/[/\\]/).length - b.split(/[/\\]/).length);
+  const tomls = (await globber.glob()).sort((a, b) => a.split(/[/\\]/).length - b.split(/[/\\]/).length);
+  //const tomls = unsorted.sort((a, b) => a.split(/[/\\]/).length - b.split(/[/\\]/).length);
 
   if (reftype == 'tag') {
       console.log(`Validating version ${version} from tag`);
