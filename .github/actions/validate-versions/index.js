@@ -14454,11 +14454,15 @@ async function globIfNecessary(patterns, follow) {
             verbatim.push(p);
         }
     });
+    console.log(`toglob=${toglob} verbatim=${verbatim}`);
     if (toglob.length > 0) {
         const globber = await glob.create(toglob.join('\n'), {followSymbolicLinks: follow});
         result = await globber.glob();
+        console.log(`globbed result=${result}`);
     }
-    return result.concat(verbatim);
+    result = result.concat(verbatim);
+    console.log(`final result=${result}`);
+    return result;
 }
 
 async function main() {
