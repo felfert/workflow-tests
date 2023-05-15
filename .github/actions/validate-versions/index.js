@@ -14471,7 +14471,7 @@ async function main() {
   const patterns = core.getMultilineInput('tomls');
   // If refname is 'branch', then the first toml is taken as a reference.
   // Therefore we sort by path length, so that the toplevel toml comes first.
-  var unsorted = globIfNecessary(patterns, true);
+  var unsorted = await globIfNecessary(patterns, true);
   console.log(typeof unsorted);
   const tomls = unsorted.sort((a, b) => a.split(/[/\\]/).length - b.split(/[/\\]/).length);
 
