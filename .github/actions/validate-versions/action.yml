@@ -4,11 +4,11 @@ inputs:
   reftype:
     description: The current github ref type
     required: false
-    default: ${{ github.ref_name }}
+    default: ${{ github.ref_type }}
   refname:
     description: The current github ref name
     required: false
-    default: ${{ github.ref_type }}
+    default: ${{ github.ref_name }}
   tomls:
     description: One or more Cargo.toml paths to check, specified as a multiline input
     required: false
