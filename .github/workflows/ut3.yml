@@ -66,10 +66,11 @@ jobs:
           refname: ${{ matrix.job.refname }}
           reftype: ${{ matrix.job.reftype }}
           tomls: ${{ matrix.job.tomls }}
-      - if: always() && !cancelled() && ( steps.test.outcome != 'success' )
-        run: echo '::notice::Test was unsuccessful'
-      - if: always() && !cancelled() && ( steps.test.outcome != matrix.job.expected )
-        run: exit 1
+        run: |
+          echo '::notice::validate-versions returned ${{ steps.test.outcome }}'
+          if [[ "${{ steps.test.outcome }}" != "${{ matrix.job.expected }}" ]] ; then
+            exit 1
+          fi
 
   testdefaults:
     runs-on: ubuntu-latest

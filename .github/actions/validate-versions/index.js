@@ -14500,24 +14500,25 @@ async function main() {
   tomls.forEach(function(f) {
       console.log(`Validating ${f}`);
       const tversion = readVersion(f);
-      // If version is a object and has a boolean member 'workspace' set to true
-      // and the file is not in the toplevel dir
-      console.debug(typeof tversion);
-      if (typeof tversion  == 'object') {
-          if (Object.hasOwn(tversion, 'workspace')) {
-              if (tversion['workspace'] === true) {
-                  if (f.split(/[/\\]/).length > 1) {
-                      console.log(`Version in ${f} refers to toplevel version`);
-                      return;
-                  }
-              }
-          }
-          core.setFailed(`Version in ${f} is not a string`);
-      }
-      console.log(`Validating version ${tversion} in ${f}`);
-      validateSemver(tversion);
-      if (tversion != version) {
-          core.setFailed(`Version ${tversion} in ${f} is different than ${version}`);
+      if (typeof tversion != 'undefined') {
+        // If version is a object and has a boolean member 'workspace' set to true
+        // and the file is not in the toplevel dir
+        if (typeof tversion  == 'object') {
+            if (Object.hasOwn(tversion, 'workspace')) {
+                if (tversion['workspace'] == true) {
+                    if (f.split(/[/\\]/).length > 1) {
+                        console.log(`Version in ${f} refers to toplevel version`);
+                        return;
+                    }
+                }
+            }
+            core.setFailed(`Version in ${f} is not a string`);
+        }
+        console.log(`Validating version ${tversion} in ${f}`);
+        validateSemver(tversion);
+        if (tversion != version) {
+            core.setFailed(`Version ${tversion} in ${f} is different than ${version}`);
+        }
       }
   });
 }
