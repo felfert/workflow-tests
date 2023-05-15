@@ -14444,9 +14444,9 @@ function readVersion(file) {
 //
 async function globIfNecessary(patterns, follow) {
     const re = /(^~)|([*?[\]])/g;
-    var result = [];
-    var verbatim = [];
-    var toglob = [];
+    const result = [];
+    const verbatim = [];
+    const toglob = [];
     patterns.forEach(function (p) {
         if (p.match(re)) {
             toglob.push(p);
@@ -14467,7 +14467,7 @@ async function main() {
   const patterns = core.getMultilineInput('tomls');
   // If refname is 'branch', then the first toml is taken as a reference.
   // Therefore we sort by path length, so that the toplevel toml comes first.
-  const tomls = globIfNecessary(patterns, true).sort((a, b) => a.split(/[/\\]/).length - b.split(/[/\\]/).length);
+  const tomls = (globIfNecessary(patterns, true)).sort((a, b) => a.split(/[/\\]/).length - b.split(/[/\\]/).length);
 
   if (reftype == 'tag') {
       console.log(`Validating version ${version} from tag`);
