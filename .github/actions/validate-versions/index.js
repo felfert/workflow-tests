@@ -14454,15 +14454,11 @@ async function globIfNecessary(patterns, follow) {
             verbatim.push(p);
         }
     });
-    console.log(`toglob=${toglob} verbatim=${verbatim}`);
     if (toglob.length > 0) {
         const globber = await glob.create(toglob.join('\n'), {followSymbolicLinks: follow});
         result = await globber.glob();
-        console.log(`globbed result=${result}`);
     }
-    result = result.concat(verbatim);
-    console.log(`final result=${result}`);
-    return result;
+    return result.concat(verbatim);
 }
 
 async function main() {
@@ -14471,9 +14467,9 @@ async function main() {
   const patterns = core.getMultilineInput('tomls');
   // If refname is 'branch', then the first toml is taken as a reference.
   // Therefore we sort by path length, so that the toplevel toml comes first.
-  var unsorted = await globIfNecessary(patterns, true);
-  console.log(typeof unsorted);
-  const tomls = unsorted.sort((a, b) => a.split(/[/\\]/).length - b.split(/[/\\]/).length);
+  //var unsorted = await globIfNecessary(patterns, true);
+  //const tomls = unsorted.sort((a, b) => a.split(/[/\\]/).length - b.split(/[/\\]/).length);
+  const tomls = (await globIfNecessary(patterns, true)).sort((a, b) => a.split(/[/\\]/).length - b.split(/[/\\]/).length);
 
   if (reftype == 'tag') {
       console.log(`Validating version ${version} from tag`);
