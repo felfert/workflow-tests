@@ -66,6 +66,8 @@ jobs:
           refname: ${{ matrix.job.refname }}
           reftype: ${{ matrix.job.reftype }}
           tomls: ${{ matrix.job.tomls }}
+      - if: always() && !cancelled() && ( steps.test.outcome != 'success' )
+        run: echo '::notice::Test was unsuccessful'
       - if: always() && !cancelled() && ( steps.test.outcome != matrix.job.expected )
         run: exit 1
 
