@@ -14425,15 +14425,49 @@ function readVersion(file) {
     return value;
 }
 
+// githubs's glob toolkit has a bug (or unexpected behavior):
+// If a pattern doe NOT contain any special glob chars, it gets removed COMPLETELY from
+// the result. This is not what a unix shell user would expect. E.g: If running in a
+// directory containing a single file index.js the following:
+//
+//     echo *.js foo.js
+//
+// would print:
+//
+//    index.js foo.js
+//
+// With this package's current implementation, foo.js would be removed from the result.
+//
+// Workaround: Before creating the globber, we filter out the "non-globbing" elements
+// and put them in a separate array whitch gets added verbatim after apply globbing
+// to the patterns that actually need globbing.
+//
+async function globIfNecessary(patterns, follow) {
+    const re = /(^~)|([*?[\]])/g;
+    var result = [];
+    var verbatim = [];
+    var toglob = [];
+    patterns.forEach(function (p) {
+        if (p.match(re)) {
+            toglob.push(p);
+        } else {
+            verbatim.push(p);
+        }
+    });
+    if (toglob.length > 0) {
+        const globber = await glob.create(toglob.join('\n'), {followSymbolicLinks: follow});
+        result = await globber.glob();
+    }
+    return result.concat(verbatim);
+}
+
 async function main() {
   var version = core.getInput('refname');
   const reftype = core.getInput('reftype');
-  const patterns = core.getMultilineInput('tomls').join('\n');
-  const globber = await glob.create(patterns, {followSymbolicLinks: false});
+  const patterns = core.getMultilineInput('tomls');
   // If refname is 'branch', then the first toml is taken as a reference.
   // Therefore we sort by path length, so that the toplevel toml comes first.
-  const tomls = (await globber.glob()).sort((a, b) => a.split(/[/\\]/).length - b.split(/[/\\]/).length);
-  //const tomls = unsorted.sort((a, b) => a.split(/[/\\]/).length - b.split(/[/\\]/).length);
+  const tomls = globIfNecessary(patterns, true).sort((a, b) => a.split(/[/\\]/).length - b.split(/[/\\]/).length);
 
   if (reftype == 'tag') {
       console.log(`Validating version ${version} from tag`);
